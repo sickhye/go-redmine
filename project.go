@@ -1,14 +1,16 @@
 package redmine
 
-type ProjectResult struct {
+import "encoding/json"
+
+type projectResult struct {
 	Project Project `json:"project"`
 }
 
-type ProjectsResult struct {
-	Projects   []*Project `json:"projects"`
-	TotalCount int        `json:"total_count"`
-	Offset     int        `json:"offset"`
-	Limit      int        `json:"limit"`
+type projectsResult struct {
+	Projects   []Project `json:"projects"`
+	TotalCount int       `json:"total_count"`
+	Offset     int       `json:"offset"`
+	Limit      int       `json:"limit"`
 }
 
 type Project struct {
@@ -27,4 +29,40 @@ type Project struct {
 	UpdatedOn       string   `json:"updated_on"`
 }
 
+func (c *Client) GetProject(project string) (*Project, error) {
+	res, err := c.Get(c.endpoint + "/projects/" + project + ".json?key=" + c.apikey)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
 
+	decoder := json.NewDecoder(res.Body)
+	var r projectResult
+	// Todo: Response httpStatusCode not 200 Pattern
+	err = decoder.Decode(&r)
+	if err != nil {
+		return nil, err
+	}
+
+	return &r.Project, nil
+}
+
+func (c *Client) GetProjects() ([]Project, error) {
+	// Todo: Limit, Offset settings
+	res, err := c.Get(c.endpoint + "/projects.json?key=" + c.apikey)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	decoder := json.NewDecoder(res.Body)
+	var r projectsResult
+	// Todo: Response httpStatusCode not 200 Pattern
+	err = decoder.Decode(&r)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.Projects, nil
+
+}
