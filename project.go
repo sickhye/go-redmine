@@ -1,6 +1,10 @@
 package redmine
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"strings"
+)
 
 type projectResult struct {
 	Project Project `json:"project"`
@@ -24,7 +28,7 @@ type Project struct {
 	IsPublic        bool     `json:"is_public"`
 	Trackers        []IdName `json:"trackers"`
 	IssueCategories []IdName `json:"issue_categories"`
-	EnabledModules  []IdName `json:"enabled_modules"`
+	EnabledModules  []IdName `j	qson:"enabled_modules"`
 	CreatedOn       string   `json:"created_on"`
 	UpdatedOn       string   `json:"updated_on"`
 }
@@ -38,8 +42,15 @@ func (c *Client) GetProject(project string) (*Project, error) {
 
 	decoder := json.NewDecoder(res.Body)
 	var r projectResult
-	// Todo: Response httpStatusCode not 200 Pattern
-	err = decoder.Decode(&r)
+	if res.Status != "200" {
+		var er errorResult
+		err = decoder.Decode(&er)
+		if err == nil {
+			err = errors.New(strings.Join(er.Errors, "\n"))
+		}
+	} else {
+		err = decoder.Decode(&r)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -57,8 +68,17 @@ func (c *Client) GetProjects() ([]Project, error) {
 
 	decoder := json.NewDecoder(res.Body)
 	var r projectsResult
-	// Todo: Response httpStatusCode not 200 Pattern
-	err = decoder.Decode(&r)
+
+	if res.Status != "200" {
+		var er errorResult
+		err = decoder.Decode(&er)
+		if err == nil {
+			err = errors.New(strings.Join(er.Errors, "\n"))
+		}
+	} else {
+		err = decoder.Decode(&r)
+	}
+
 	if err != nil {
 		return nil, err
 	}
