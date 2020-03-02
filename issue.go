@@ -3,6 +3,7 @@ package redmine
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -66,7 +67,17 @@ type JournalDetail struct {
 	NewValue string `json:"new_value"`
 }
 
-func (c *Client) GetIssue(issueId int) (*Issue, error) {
+type IssueFilter struct {
+	IssueId      string
+	ProjectId    string
+	SubProjectId string
+	TrackerId    string
+	StatusId     string
+	AssignedToId string
+	ParentId     string
+}
+
+func (c *Client) GetIssueById(issueId int) (*Issue, error) {
 	res, err := c.Get(c.endpoint + "/issues/" + strconv.Itoa(issueId) + ".json?key=" + c.apikey)
 	if err != nil {
 		return nil, err
@@ -89,7 +100,6 @@ func (c *Client) GetIssue(issueId int) (*Issue, error) {
 	}
 
 	return &i.Issue, nil
-
 }
 
 func (c *Client) GetIssues() ([]Issue, error) {
@@ -115,5 +125,45 @@ func (c *Client) GetIssues() ([]Issue, error) {
 	}
 
 	return i.Issues, nil
+}
 
+func (c *Client) GetIssueByFilter(f *IssueFilter) ([]Issue, error) {
+
+}
+
+func getIssueUrlQueryString(filter *IssueFilter) string {
+	if filter == nil {
+		return ""
+	}
+
+	var q string
+	if filter.IssueId != "" {
+		q = q + fmt.Sprintf("&issue_id=%v", filter.IssueId)
+	}
+
+	if filter.ProjectId != "" {
+		q = q + fmt.Sprintf("&project_id=%v", filter.ProjectId)
+	}
+
+	if filter.SubProjectId != "" {
+		q = q + fmt.Sprintf("&subproject_id=%v", filter.SubProjectId)
+	}
+
+	if filter.TrackerId != "" {
+		q = q + fmt.Sprintf("&tracker_id=%v", filter.TrackerId)
+	}
+
+	if filter.StatusId != "" {
+		q = q + fmt.Sprintf("&tracker_id=%v", filter.StatusId)
+	}
+
+	if filter.AssignedToId != "" {
+		q = q + fmt.Sprintf("&tracker_id=%v", filter.AssignedToId)
+	}
+
+	if filter.ParentId != "" {
+		q = q + fmt.Sprintf("&tracker_id=%v", filter.ParentId)
+	}
+
+	return q
 }
