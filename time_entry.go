@@ -13,6 +13,5 @@ type TimeEntry struct {
 	UpdatedOn string  `json:"updated_on"`
 }
 
-func (c *Client) CreateTimeEntry() error {
-
+func (c *Client) CreateTimeEntry(t TimeEntry) error {
 }
