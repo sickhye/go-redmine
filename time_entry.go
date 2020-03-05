@@ -60,7 +60,7 @@ func (c *Client) CreateTimeEntry(t TimeEntryRequest) (*TimeEntry, error) {
 
 	decoder := json.NewDecoder(res.Body)
 	var r timeEntryResult
-	if res.StatusCode != 201 {
+	if res.StatusCode != http.StatusCreated {
 		var er errorResult
 		err = decoder.Decode(&er)
 		if err == nil {

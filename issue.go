@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 )
@@ -86,7 +87,7 @@ func (c *Client) GetIssueById(issueId int) (*Issue, error) {
 
 	decoder := json.NewDecoder(res.Body)
 	var i issueResult
-	if res.Status != "200" {
+	if res.StatusCode != http.StatusOK {
 		var er errorResult
 		err = decoder.Decode(&er)
 		if err == nil {
@@ -111,7 +112,7 @@ func (c *Client) GetIssues() ([]Issue, error) {
 
 	decoder := json.NewDecoder(res.Body)
 	var i issuesResult
-	if res.Status != "200" {
+	if res.StatusCode != http.StatusOK {
 		var er errorResult
 		err = decoder.Decode(&er)
 		if err == nil {
@@ -136,7 +137,7 @@ func (c *Client) GetIssuesByFilter(f *IssueFilter) ([]Issue, error) {
 
 	decoder := json.NewDecoder(res.Body)
 	var i issuesResult
-	if res.Status != "200" {
+	if res.StatusCode != http.StatusOK {
 		var er errorResult
 		err = decoder.Decode(&er)
 		if err == nil {

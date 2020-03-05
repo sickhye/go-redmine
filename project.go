@@ -3,6 +3,7 @@ package redmine
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
 	"strings"
 )
 
@@ -42,7 +43,7 @@ func (c *Client) GetProject(project string) (*Project, error) {
 
 	decoder := json.NewDecoder(res.Body)
 	var r projectResult
-	if res.Status != "200" {
+	if res.StatusCode != http.StatusOK {
 		var er errorResult
 		err = decoder.Decode(&er)
 		if err == nil {
