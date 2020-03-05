@@ -127,7 +127,29 @@ func (c *Client) GetIssues() ([]Issue, error) {
 	return i.Issues, nil
 }
 
-func (c *Client) GetIssueByFilter(f *IssueFilter) ([]Issue, error) {
+func (c *Client) GetIssuesByFilter(f *IssueFilter) ([]Issue, error) {
+	res, err := c.Get(c.endpoint + "/issues.json?key=" + c.apikey + getIssueUrlQueryString(f))
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	decoder := json.NewDecoder(res.Body)
+	var i issuesResult
+	if res.Status != "200" {
+		var er errorResult
+		err = decoder.Decode(&er)
+		if err == nil {
+			err = errors.New(strings.Join(er.Errors, "\n"))
+		}
+	} else {
+		err = decoder.Decode(&i)
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return i.Issues, nil
 
 }
 
