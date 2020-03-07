@@ -70,7 +70,7 @@ func (c *Client) GetProjects() ([]Project, error) {
 	decoder := json.NewDecoder(res.Body)
 	var r projectsResult
 
-	if res.Status != "200" {
+	if res.StatusCode != http.StatusOK {
 		var er errorResult
 		err = decoder.Decode(&er)
 		if err == nil {
