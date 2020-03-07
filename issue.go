@@ -104,32 +104,27 @@ func (c *Client) GetIssueById(issueId int) (*Issue, error) {
 }
 
 func (c *Client) GetIssues() ([]Issue, error) {
-	res, err := c.Get(c.endpoint + "/issues.json?key=" + c.apikey)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-
-	decoder := json.NewDecoder(res.Body)
-	var i issuesResult
-	if res.StatusCode != http.StatusOK {
-		var er errorResult
-		err = decoder.Decode(&er)
-		if err == nil {
-			err = errors.New(strings.Join(er.Errors, "\n"))
-		}
-	} else {
-		err = decoder.Decode(&i)
-	}
+	issues, err := getIssues(c, c.endpoint+"/issues.json?key="+c.apikey)
 	if err != nil {
 		return nil, err
 	}
 
-	return i.Issues, nil
+	return issues, nil
 }
 
 func (c *Client) GetIssuesByFilter(f *IssueFilter) ([]Issue, error) {
-	res, err := c.Get(c.endpoint + "/issues.json?key=" + c.apikey + getIssueUrlQueryString(f))
+	issues, err := getIssues(c, c.endpoint+""+
+		"/issues.json?key="+c.apikey+getIssueUrlQueryString(f))
+	if err != nil {
+		return nil, err
+	}
+
+	return issues, nil
+
+}
+
+func getIssues(c *Client, url string) ([]Issue, error) {
+	res, err := c.Get(url)
 	if err != nil {
 		return nil, err
 	}
