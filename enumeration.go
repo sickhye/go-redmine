@@ -14,7 +14,7 @@ type TimeEntryActivity struct {
 	Active    bool   `json:"active"`
 }
 
-type timeEntryActivity struct {
+type timeEntryActivities struct {
 	TimeEntryActivities []TimeEntryActivity `json:"time_entry_activities"`
 }
 
@@ -48,7 +48,7 @@ func (c *Client) GetTimeEntryActivities() ([]TimeEntryActivity, error) {
 	defer res.Body.Close()
 
 	decoder := json.NewDecoder(res.Body)
-	var t timeEntryActivity
+	var t timeEntryActivities
 	if res.StatusCode != http.StatusOK {
 		var er errorResult
 		err = decoder.Decode(&er)
