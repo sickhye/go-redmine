@@ -8,7 +8,7 @@ import (
 )
 
 type timeEntryResult struct {
-	TimeEntry TimeEntry `json:"time_entry"`
+	TimeEntries []TimeEntry `json:"time_entries"`
 }
 
 type TimeEntry struct {
@@ -35,6 +35,32 @@ type TimeEntryRequest struct {
 
 type timeEntryRequest struct {
 	TimeEntry TimeEntryRequest `json:"time_entry"`
+}
+
+func (c *Client) GetTimeEntries() ([]TimeEntry, error) {
+	res, err := c.Get(c.endpoint + "/time_entries.json?key=" + c.apikey)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	decoder := json.NewDecoder(res.Body)
+	var t timeEntryResult
+	if res.StatusCode != http.StatusOK {
+		var er errorResult
+		err = decoder.Decode(&er)
+		if err == nil {
+			err = errors.New(strings.Join(er.Errors, "\n"))
+		}
+	} else {
+		err = decoder.Decode(&t)
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return t.TimeEntries, nil
+
 }
 
 func (c *Client) CreateTimeEntry(t TimeEntryRequest) (*TimeEntry, error) {
