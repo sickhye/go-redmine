@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-type TimeEntryActivity struct {
+type Enumeration struct {
 	Id        int    `json:"id"`
 	Name      string `json:"name"`
 	IsDefault bool   `json:"is_default"`
@@ -15,32 +15,18 @@ type TimeEntryActivity struct {
 }
 
 type timeEntryActivities struct {
-	TimeEntryActivities []TimeEntryActivity `json:"time_entry_activities"`
-}
-
-type IssuePrioritiy struct {
-	Id        int    `json:"id"`
-	Name      string `json:"name"`
-	IsDefault bool   `json:"is_default"`
-	Active    bool   `json:"active"`
+	TimeEntryActivities []Enumeration `json:"time_entry_activities"`
 }
 
 type issuePriorities struct {
-	IssuePrioritiesr []IssuePrioritiy `json:"issue_priorities"`
-}
-
-type DocumentCategory struct {
-	Id        int    `json:"id"`
-	Name      string `json:"name"`
-	IsDefault bool   `json:"is_default"`
-	Active    bool   `json:"active"`
+	IssuePrioritiesr []Enumeration `json:"issue_priorities"`
 }
 
 type documentCategories struct {
-	DocumentCategories []DocumentCategory
+	DocumentCategories []Enumeration `json:"document_categories"`
 }
 
-func (c *Client) GetTimeEntryActivities() ([]TimeEntryActivity, error) {
+func (c *Client) GetTimeEntryActivities() ([]Enumeration, error) {
 	res, err := c.Get(c.endpoint + "/enumerations/time_entry_activities.json?key=" + c.apikey)
 	if err != nil {
 		return nil, err
@@ -65,7 +51,7 @@ func (c *Client) GetTimeEntryActivities() ([]TimeEntryActivity, error) {
 	return t.TimeEntryActivities, nil
 }
 
-func (c *Client) GetIssuePriorities() ([]IssuePrioritiy, error) {
+func (c *Client) GetIssuePriorities() ([]Enumeration, error) {
 	res, err := c.Get(c.endpoint + "/enumerations/issue_priorities.json?key=" + c.apikey)
 	if err != nil {
 		return nil, err
@@ -90,7 +76,7 @@ func (c *Client) GetIssuePriorities() ([]IssuePrioritiy, error) {
 	return i.IssuePrioritiesr, nil
 }
 
-func (c *Client) GetDocumentCategories() ([]DocumentCategory, error) {
+func (c *Client) GetDocumentCategories() ([]Enumeration, error) {
 	res, err := c.Get(c.endpoint + "/enumerations/document_categories.json?key=" + c.apikey)
 	if err != nil {
 		return nil, err
