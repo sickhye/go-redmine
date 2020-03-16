@@ -113,8 +113,7 @@ func (c *Client) GetIssues() ([]Issue, error) {
 }
 
 func (c *Client) GetIssuesByFilter(f *IssueFilter) ([]Issue, error) {
-	issues, err := getIssues(c, c.endpoint+""+
-		"/issues.json?key="+c.apikey+getIssueUrlQueryString(f))
+	issues, err := getIssues(c, c.endpoint+"/issues.json?key="+c.apikey+getIssueUrlQueryString(f))
 	if err != nil {
 		return nil, err
 	}
