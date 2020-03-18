@@ -34,7 +34,7 @@ type TimeEntryRequest struct {
 }
 
 type timeEntryRequest struct {
-	TimeEntry TimeEntryRequest `json:"time_entry"`
+	TimeEntry *TimeEntryRequest `json:"time_entry"`
 }
 
 func (c *Client) GetTimeEntries() ([]TimeEntry, error) {
