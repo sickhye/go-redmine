@@ -13,10 +13,10 @@ type timeEntryResult struct {
 
 type TimeEntry struct {
 	Id        int     `json:"id"`
-	Project   IdName  `json:"project"`
-	Issue     Id      `json:"issue"`
-	User      IdName  `json:"user"`
-	Activity  IdName  `json:"activity"`
+	Project   *IdName `json:"project"`
+	Issue     *Id     `json:"issue"`
+	User      *IdName `json:"user"`
+	Activity  *IdName `json:"activity"`
 	Hours     float32 `json:"hours"` //作業時間
 	Comments  string  `json:"comments"`
 	SpentOn   string  `json:"spent_on"` //作業日
