@@ -63,7 +63,7 @@ func (c *Client) GetTimeEntries() ([]TimeEntry, error) {
 
 }
 
-func (c *Client) CreateTimeEntry(t *TimeEntryRequest) (*TimeEntry, error) {
+func (c *Client) CreateTimeEntry(t *TimeEntryRequest) ([]TimeEntry, error) {
 	var item timeEntryRequest
 	item.TimeEntry = t
 	s, err := json.Marshal(item)
@@ -98,5 +98,5 @@ func (c *Client) CreateTimeEntry(t *TimeEntryRequest) (*TimeEntry, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &r.TimeEntry, nil
+	return r.TimeEntries, nil
 }
